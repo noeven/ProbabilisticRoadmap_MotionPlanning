@@ -15,8 +15,8 @@ figure;
 % adjust these sixe numbers to see what happens.
 
 %start_config = [240 120 240 120 240 60]'
-start_config =  [0  0   0   -45   45   0]';
-end_config =    [35  0   0   0   0   0]';
+start_config =  [0  0   0   0   0   180]';
+end_config =    [0  0   60   0   0   180]';
 
 fv = SixLinkRobot (start_config); 
 fv2 = SixLinkRobot (end_config);
@@ -59,7 +59,7 @@ route = ShortestPathDijkstra(roadmap2.edges, roadmap2.edge_lengths, nsamples+1, 
  
 %% Plot the trajectory
  
- 
+pause(4);
 for i = 2:length(route)
     x1 = roadmap2.samples(:,route(i-1));
     x2 = roadmap2.samples(:,route(i));
@@ -76,7 +76,6 @@ for i = 2:length(route)
     
     
     for j = 0:n
-        
         
         pause(.05);
         
