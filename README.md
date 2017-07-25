@@ -10,7 +10,11 @@ Matlab project to naviagate a 6 armed robot through an obstacle filled environme
 
 ## Demo
 
-`start_config =  [0  0   0   -45   45   0]';`<br>
-`end_config =    [-35  -30   -25   20   20   -20]';`
- 
+`start_config = [240 120 240 120 240 60]`<br>
+`end_config = [330 30 0 0 0 180]`
+![](https://github.com/JeremySMorgan/Probabilistic-Roadmap-Configuration-Space-Navigation/blob/master/prm_3.gif)
+
+`start_config =  [0  0   0   -45   45   0]`<br>
+`end_config =    [-35  -30   -25   20   20   -20]`
 ![](https://github.com/JeremySMorgan/Probabilistic-Roadmap-Configuration-Space-Navigation/blob/master/prm_2.gif)
+
