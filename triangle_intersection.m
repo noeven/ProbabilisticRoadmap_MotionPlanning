@@ -1,57 +1,90 @@
 function flag = triangle_intersection(P1, P2)
-
-    flag = true;
-
-    for i=1:3
-        
-        p0 = P1(mod(i,3)+1,:);
-        pF = P1(mod(i+1,3)+1,:);
-        p3 = P1(mod(i+2,3)+1,:);
-        
-        if isSeperatingEdge(p0,pF,p3,P2)
-            flag = false;
-        end
-    end
-
-        for i=1:3
-        
-        p0 = P2(mod(i,3)+1,:);
-        pF = P2(mod(i+1,3)+1,:);
-        p3 = P2(mod(i+2,3)+1,:);
-        
-        if isSeperatingEdge(p0,pF,p3,P1)
-            flag = false;
-        end
+% triangle_test : returns true if the triangles overlap and false otherwise
+    
+    flag = false; 
+    if triangle_inside(P1,P2)
+        flag = true;
     end
     
+    for i = 1:3
+        for j = 1:3
+            if i >= 3
+                ii = 1;
+            else
+                ii = i+1;
+            end
+            if j >= 3
+                jj = 1;
+            else
+                jj = j+1;
+            end
+
+            x1 = P1(i ,1);
+            x2 = P1(ii,1);
+            y1 = P1(i ,2);
+            y2 = P1(ii,2);
+
+            x3 = P2(j ,1);
+            x4 = P2(jj,1);
+            y3 = P2(j ,2);
+            y4 = P2(jj,2);      
+
+            if line_intersection(x1, x2, x3, x4, y1, y2, y3, y4)== 1
+                flag = true;
+            end
+        end
+    end
+
+end
+
+function [ intersection ] = line_intersection( x1, x2, x3, x4, y1, y2, y3, y4)
+
+    numera = (x4-x3) * (y1-y3) - (y4-y3) * (x1-x3);
+    denom  = (y4-y3) * (x2-x1) - (x4-x3) * (y2-y1);
+    numerb = (x2-x1) * (y1-y3) - (y2-y1) * (x1-x3);
+
+    if abs(numera) < eps && abs(numerb) < eps && abs(denom) < eps
+        intersection = true;
+    else
+        % test for parrellel case 
+        if abs(denom) < eps
+            intersection = false;
+        else
+            % test for an intersection along segments 
+            mua = numera / denom;
+            mub = numerb / denom;
+            if mua < 0 || mua > 1 || mub < 0 || mub > 1
+                intersection = false;
+            else
+                intersection = true;
+            end
+        end
+    end   
 end
 
 
-
-% --- Inputs
-% p0 - (x,y) coordinate of first point on seperating edge
-% pf - (x,y) coordinate of second point on seperating edge
-% p3 - (x,y) coordinate of third point on triangle
-% P2 - the other triangle
-
-% --- Output
-% flag - boolean, 
-
-
-function flag = isSeperatingEdge(p0,pF,p3,P2)
-
-    flag = true;
+function [ inside ] = triangle_inside( P1, P2 )
+    inside = false;
+    B =[P2(1,1) P2(1,2) 1;
+        P2(2,1) P2(2,2) 1;
+        P2(3,1) P2(3,2) 1];
     
-    % y = m*x + b
-    m = ( pF(1,2) - p0(1,2) )/ (pF(1,1) - p0(1,1));
-    b = pF(1,2) - m*pF(1,1);
+    B1 =[P1(1,1) P1(1,2) 1;
+        P2(2,1) P2(2,2) 1;
+        P2(3,1) P2(3,2) 1];
+
+    B2 =[P2(1,1) P2(1,2) 1;
+        P1(1,1) P1(1,2) 1;
+        P2(3,1) P2(3,2) 1];
+
+    B3 =[P2(1,1) P2(1,2) 1;
+        P2(2,1) P2(2,2) 1;
+        P1(1,1) P1(1,2) 1];
     
-    p3Side = (p3(1,2) > m*p3(1,1) + b);
-        
-    for row = 1:size(P2)
-        if (P2(row,2) >= m*P2(row,1) + b) == p3Side
-            flag = false;
-        end
+    b = abs(det(B1)/2) + abs(det(B2)/2) + abs(det(B3)/2);
+    
+    if abs(det(B)/2) == b
+        inside = true;
     end
 end
 

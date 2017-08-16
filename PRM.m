@@ -42,20 +42,20 @@ for i = 2:nsamples
     samples(:,i) = x(:);
     
     % Find the nearest neighbors
-    distances = Dist(x, samples(:,1:(i-1)));   
-    n = length(distances);
-    [sorted_distances, distance_indexes] = sort(distances);
-    
-    for ix = 1:size(sorted_distances)
-        for j =distance_indexes(ix)
-            if (LocalPlanner(x, samples(:,j)))
-                nedges = nedges + 1;
-                edges(nedges,:) = [n+1, j];
-                edge_lengths(nedges) = sorted_distances(ix);
-            end
-        end 
-    end    
-    %fprintf (1, 'nsamples = %d, nedges = %d\n', i, nedges);
+    distances = Dist(x, samples(:,1:(i-1)));
+
+    length_n = length(distances);
+    [sorted_distances, index_distances] = sort(distances);
+
+    for ii = 1: min(k, length_n)
+        j = index_distances(ii);
+        if (LocalPlanner(x, samples(:,j)))
+            nedges = nedges + 1;
+            edges(nedges,:) = [length_n+1, j];
+            edge_lengths(nedges) = sorted_distances(ii);
+        end
+    end
+    fprintf (1, 'nsamples = %d, nedges = %d\n', i, nedges);
 end
  
 roadmap.samples = samples;
