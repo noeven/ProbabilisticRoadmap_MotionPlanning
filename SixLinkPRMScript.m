@@ -1,12 +1,12 @@
 close all, clear all
 figure(1);
 
-start_config = [240 120 240 120 240 60]
-end_config = [330 30 0 0 0 180]
+start_config = [240 120 240 120 240 60];
+end_config = [330 30 0 0 0 180];
 fv = SixLinkRobot (start_config);
 fv2 = SixLinkRobot (end_config);
-
 p = patch (fv);
+
 p.FaceColor = 'red';
 p.EdgeColor = 'none';
 
@@ -24,24 +24,21 @@ obstacle = appendFV (obstacle, transformFV(boxFV(-6, 6, -5, 4), 45, [15 -15]));
 
 patch (obstacle);
 
-%% Build roadmap
+% Build roadmap
 
-nsamples = 20;
-neighbors = 5;
+nsamples = 45;
+neighbors = 6;
 
 roadmap = PRM (@()(RandomSampleSixLink(obstacle)), @DistSixLink, @(x,y)(LocalPlannerSixLink(x,y,obstacle)), nsamples, neighbors);
 
-%% Add start, end nodes
+% Add start, end nodes
 roadmap2 = AddNode2PRM (start_config', roadmap, @DistSixLink, @(x,y)(LocalPlannerSixLink(x,y,obstacle)), neighbors);
 roadmap2 = AddNode2PRM (end_config', roadmap2, @DistSixLink, @(x,y)(LocalPlannerSixLink(x,y,obstacle)), neighbors);
 
-%% Plan a route
-
+% Plan a route
 route = ShortestPathDijkstra(roadmap2.edges, roadmap2.edge_lengths, nsamples+1, nsamples+2)
 
-%% Plot the trajectory
-
-pause(.5);
+% Plot the trajectory
 for i = 2:length(route)
     x1 = roadmap2.samples(:,route(i-1));
     x2 = roadmap2.samples(:,route(i));
@@ -66,7 +63,7 @@ for i = 2:length(route)
         p.Vertices = fv.vertices;
         
         drawnow;
-        
+        pause(.01);
         if (CollisionCheck(fv, obstacle))
 %            fprintf (1, 'Ouch\n');
         end

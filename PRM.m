@@ -16,17 +16,14 @@ function roadmap = PRM (RandomSample, Dist, LocalPlanner, nsamples, k)
 % Output :
 %   roadmap - a structure the samples, the edges and edge lengths in the
 %        roadmap graph
- 
+
 x = RandomSample();
- 
-% Array of random samples, each column corresponds to the coordinates
-% of a point in configuration space.
+
+% Array of random samples, each column corresponds to the coordinates of a point in configuration space.
+% repmat returns copies of an array
 samples = repmat(x(:), 1, nsamples);
  
- 
-% edges - an array with 2 rows each column has two integer entries
-% (i, j) which encodes the fact that sample i and sample j are connected
-% by an edge. For each 
+% edges - an array with 2 rows each column has two integer entries (i, j) which encodes the fact that sample i and sample j are connected by an edge
 edges = zeros(nsamples*k, 2);
 edge_lengths = zeros(nsamples*k, 1);
  
